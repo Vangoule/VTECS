@@ -2,7 +2,7 @@ import Universe from "./core/universe";
 import { System } from "./system/system";
 import SystemManager from "./system/system_manager";
 
-export class TECS { 
+export class ECS { 
 
     constructor() {
         this.universe = new Universe();

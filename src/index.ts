@@ -7,4 +7,4 @@ export * from "./tecs/component/component_manager";
 export * from "./tecs/component/component_storage";
 export * from "./tecs/entity/entity";
 export * from "./tecs/entity/entity_manager";
-export * from "./tecs/tecs";
+export * from "./vtecs/vtecs";

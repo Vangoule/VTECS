@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { TECS } from "../TECS";
+import { TECS } from "../vtecs";
 
 import { Component } from "../component/component";
 
