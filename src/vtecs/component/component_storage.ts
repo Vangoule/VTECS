@@ -2,6 +2,7 @@ import { Entity, MaxEntities } from "../entity/entity";
 import { Component } from "./component";
 import { ComponentHandle } from "./component_handle";
 
+/* A component array stores components of a specific type. It extends the Array class to limit the number of components that can be added. */
 export class ComponentArray<ComponentType> extends Array<ComponentType> {
   constructor(public readonly max: number) {
     super();
@@ -36,6 +37,7 @@ export class ComponentStorage<ComponentType> {
     return undefined;
   };
 
+  /*Check if the entity has a component of this type. */
   public hasComponent = (ent: Entity): Boolean => {
     if (this.entityMap.has(ent)) {
       return true;
@@ -43,6 +45,7 @@ export class ComponentStorage<ComponentType> {
     return false;
   };
 
+  /*Attach a component to an entity. This will return a handle to the component that was added. If the entity already has a component of this type, it will return undefined. */
   public attach = (
     ent: Entity,
     component: ComponentType
@@ -70,6 +73,7 @@ export class ComponentStorage<ComponentType> {
     );
   };
 
+  /*Detach a component from an entity. This will remove the component from the storage and return whether it was successful. */
   public detach(ent: Entity): boolean {
     if (!this.hasComponent(ent)) {
       //Return an empty handle as we aren't adding a component.
@@ -102,6 +106,7 @@ export class ComponentStorage<ComponentType> {
     return true;
   }
 
+  /*Remove all components of this type. This will not remove the component array, just clear it.*/
   public clear(): void {
     this.components = new ComponentArray<ComponentType>(MaxEntities);
     this.componentMap.clear();
@@ -109,13 +114,16 @@ export class ComponentStorage<ComponentType> {
     this.numComponents = 0;
   }
 
+  /*Get the number of components of this type that are currently stored in this storage. */
   public getComponentCount(): number {
     return this.numComponents;
   }
 
+  /*Get the component array that stores all components of this type. */
   public getComponentArray(): ComponentArray<ComponentType> {
     return this.components;
   }
+  
 
   //Used to keep track of all the in use entities
   private componentMap = new Map<number, Entity>();

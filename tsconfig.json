@@ -6,6 +6,8 @@
     "target": "esnext",
     "lib": ["esnext"],
     "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": false,
     "strict": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
