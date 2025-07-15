@@ -21,6 +21,7 @@ export class Universe {
     this.entityManager = new EntityManager();
     this.actionQueue = new ActionQueue();
     this.componentManager = new ComponentManager(this.eventManager);
+    this.eventManager = new EventManager();
   }
 
   /* Create a new entity, returning an unused number */
@@ -48,7 +49,7 @@ export class Universe {
   public attachComponent<ComponentType extends object>(
     ent: Entity,
     component: ComponentType,
-    immediate: boolean = false
+    immediate: boolean = this.immediate
   ): void {
     if (this.isValidEntity(ent)) {
       if (!immediate) {
@@ -67,7 +68,7 @@ export class Universe {
   public detachComponent<ComponentType extends object>(
     ent: Entity,
     componentClass: { new (...args: any[]): ComponentType },
-    immediate: boolean = false
+    immediate: boolean = this.immediate
   ): boolean {
     if (this.isValidEntity(ent)) {
       if (!immediate) {
@@ -82,8 +83,6 @@ export class Universe {
       }
     }
     return false;
-
-
   }
 
   /* Check if an entity has a specific component type */
@@ -106,9 +105,7 @@ export class Universe {
     const storage =
       this.componentManager.getComponentStorage<ComponentType>(componentClass);
     if (storage) {
-      storage.getComponentArray().forEach((component, ent) => {
-        callback(component, ent);
-      });
+      storage.forEachComponent(callback);
     }
   }
 
@@ -117,6 +114,34 @@ export class Universe {
     this.entityManager.getEntities().forEach((ent) => {
       callback(ent);
     });
+  }
+
+  public eachEntityWithComponent<ComponentType>(
+    componentClass: { new (...args: any[]): ComponentType },
+    callback: (component: ComponentType, ent: Entity) => void
+  ): void {
+    const storage =
+      this.componentManager.getComponentStorage<ComponentType>(componentClass);
+    if (storage) {
+      storage.forEachComponent(callback);
+    }
+  }
+
+  public eachEntityWithComponents<T extends any[]>(
+    componentClasses: { [K in keyof T]: new (...args: any[]) => T[K] },
+    callback: (...args: [...components: T, ent: Entity]) => void
+  ): boolean {
+    let found = false;
+    this.eachEntity((ent) => {
+      const components = componentClasses.map(
+        (componentClass) => this.componentManager.getHandleFromEntity(componentClass, ent)?.component
+      );
+      if (components.every((c) => c !== undefined)) {
+        callback(...(components as T), ent);
+        found = true;
+      }
+    });
+    return found;
   }
 
   /* Returns the Entity Manager */
@@ -133,4 +158,6 @@ export class Universe {
   private componentManager: ComponentManager;
   private eventManager: EventManager;
   private actionQueue: ActionQueue;
+
+  public immediate = true;
 }

@@ -96,4 +96,5 @@ export class ComponentManager {
 
   /* Stores a map of component storages against their component classes. This allows for quick lookup of component storages. The function being passed in is the constructor of the component class. */
   private storageMap = new Map<Function, ComponentStorage<any>>();
+  
 }

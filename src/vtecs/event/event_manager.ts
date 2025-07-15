@@ -49,4 +49,24 @@ export class EventManager {
       this.listeners.clear();
     }
   }
+
+  /* Check if there are any listeners for a specific event type. */
+  public hasListener<EventType extends Event>(
+    eventClass: { new (...args: any[]): EventType }
+  ): boolean {
+    return (this.listeners.get(eventClass)?.size ?? 0) > 0;
+  }
+
+  /* Get all listeners for a specific event type. */
+  public getListeners<EventType extends Event>(
+    eventClass: { new (...args: any[]): EventType }
+  ): Array<(event: EventType) => void> {
+    return Array.from(this.listeners.get(eventClass) || []);
+  }
+
+  /* Get all registered event types. */
+  public getRegisteredEventTypes(): Array<Function> {
+    return Array.from(this.listeners.keys());
+  }
+  
 }

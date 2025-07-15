@@ -124,6 +124,11 @@ export class ComponentStorage<ComponentType> {
     return this.components;
   }
   
+  public forEachComponent(callback: (component: ComponentType, ent: Entity) => void): void {
+    this.entityMap.forEach((index, ent) => {
+      callback(this.components[index], ent);
+    });
+  }
 
   //Used to keep track of all the in use entities
   private componentMap = new Map<number, Entity>();
